@@ -33,18 +33,23 @@ struct Editora {
 	string nome, local;
 };
 
-struct Usuario {
-	string nome;
+struct Retirado {
+	int id = 0;
 	Data retirada, devolucao;
 	bool atraso;
-	//relacionar usuario e livro/revista
+};
+
+struct Usuario {
+	string nome;
+	int id = 0;
+	Retirado retirados[100];
 };
 
 struct Livro {
 	string titulo, assunto;
 	Autor autor;
 	Editora editora;
-	int publicacao, identificador = 0;
+	int publicacao, id = 0;
 	bool disponivel = true;
 	Data retirada;
 };
@@ -53,7 +58,7 @@ struct Revista {
 	string titulo, assunto;
 	Editora editora;
 	Data publicacao;
-	int identificador = 0;
+	int id = 0;
 	bool disponivel = true;
 };
 
@@ -65,6 +70,7 @@ Data ler_data() {
 	cin >> d.mes;
 	cout << "\tAno: ";
 	cin >> d.ano;
+
 	return d;
 }
 
@@ -88,6 +94,20 @@ Editora ler_editora() {
 	getline(cin, editora.local);
 
 	return editora;
+}
+
+Usuario cadastrar_usuario() {
+	Usuario u;
+	cout << "\nPreencha os dados abaixo: " << endl;
+
+	cin.ignore();
+	cout << "\nNome Completo: ";
+	getline(cin, u.nome);
+
+	cout << "Seu identificador de usuario: ";
+	cin >> u.id;
+
+	return u;
 }
 
 Livro cadastrar_livro() {
@@ -114,7 +134,6 @@ Livro cadastrar_livro() {
 	cout << "Assunto: ";
 	getline(cin, l.assunto);
 
-	//add identificador
 	return l;
 }
 
@@ -141,7 +160,6 @@ Revista cadastrar_revista() {
 	cout << "Assunto: ";
 	getline(cin, r.assunto);
 
-	//add identificador
 	return r;
 }
 
@@ -150,6 +168,30 @@ time_t get_current_time() {
 	return time(nullptr);
 }
 
+const int MAX_RETIRADOS = 100;
+
+//quantidade de itens retirados por um usuario
+int qtd_retiradas(Usuario usuario) {
+	int soma = 0;
+	for (int j = 0; j < MAX_RETIRADOS; j++) {
+		if (!usuario.retirados[j].id) { //verifica a quantidade de itens já retirados pelo usuario
+			soma++;
+		}
+	}
+	return soma;
+}
+
+//verifica se ha atraso 
+bool atraso(Usuario usuario) {
+	for (int j = 0; j < MAX_RETIRADOS; j++) {
+		if (usuario.retirados[j].atraso) { //nao permite retirar mais livros enquanto tiver um com atraso de devolucao
+			cout << "\nVoce esta com um livro em atraso" << endl
+				<< "Nao podera realizar mais retiradas enquanto nao regularizar as devolucoes" << endl;
+			return true;
+		}
+	}
+	return false;
+}
 
 void mostrar_autor(Autor a) {
 	cout << a.nome << " " << a.sobrenome << endl;
@@ -160,28 +202,78 @@ void mostrar_editora(Editora ed) {
 }
 
 void mostrar_livro(Livro a) {
-	cout << "\nDados do livro:" << endl;
-	cout << "\tTitulo: " << a.titulo << endl;
+	cout << "\nDados do livro:" << endl
 
-	cout << "\tAutor: ";
+		<< "\tID do livro: " << a.id << endl
+
+		<< "\tTitulo: " << a.titulo << endl
+
+		<< "\tAutor: ";
 	mostrar_autor(a.autor);
 
 	cout << "\tEditora: ";
 	mostrar_editora(a.editora);
 
-	cout << "\tAno de Publicacao: " << a.publicacao << endl;
-	cout << "\tAssunto: " << a.assunto << endl;
-	if (a.disponivel == true) {
+	cout << "\tAno de Publicacao: " << a.publicacao << endl
+
+		<< "\tAssunto: " << a.assunto << endl;
+
+	if (a.disponivel == true)
 		cout << "\tDisponivel\n";
-	}
-	else {
+	else
 		cout << "\tIndisponivel\n";
+}
+
+void mostrar_revista(Revista r) {
+	cout << "\nDados da Revista:" << endl
+
+		<< "\tID da revista: " << r.id << endl
+
+		<< "\tTitulo: " << r.titulo << endl
+
+		<< "\tEditora: ";
+	mostrar_editora(r.editora);
+
+	cout << "\tMes de Publicacao: " << r.publicacao.mes << endl
+		<< "\tAno de Publicacao: " << r.publicacao.ano << endl;
+
+	cout << "\tAssunto: " << r.assunto << endl;
+
+	if (r.disponivel == true)
+		cout << "\tDisponivel\n";
+	else
+		cout << "\tIndisponivel\n";
+}
+
+void mostrar_usuario(Usuario u) {
+	cout << "\nDados do Usuario: " << endl
+
+		<< "\tID do usuario: " << u.id << endl
+
+		<< "\tNome Completo:" << u.nome << endl
+
+		<< "\tRetiradas do usuario: " << u.retirados << endl;
+}
+
+int gerar_ID(int num) {
+	int id = 0;
+	srand(time(NULL));
+	if (num < 1100) {
+		id = num + rand() % 900 + 1; //id pra livros
+		return id;
 	}
-	//id livro
+	else if (num > 1100 && num < 2100) {
+		id = num + rand() % 900 + 1; //id pra revistas
+		return id;
+	}
+	else if (num >  2100 && num < 3100) {
+		id = num + rand() % 900 + 1; //id pra usuarios
+		return id;
+	}
 }
 
 //gera cadastros iniciais de titulos
-void gerar_titulos(string lista_titulos[]) {
+void gerar_titulos(string lista_titulos[], string titulos_revistas[]) {
 	const int tam = 9, tam2 = 10;
 	string titulos[] = { "Tudo ou Nada", "Amanha eh outro dia", "Felizes para Sempre", "A Ultima Batalha", "Guerra dos Reis", "A Voz da Natureza", "Canto da Tempestade", "Maldicao Azul", "Harmonia em Vermelho", "Deuses em Caos" };
 
@@ -192,6 +284,23 @@ void gerar_titulos(string lista_titulos[]) {
 		int a = rand() % tam2;
 		if (aux[i] == 0) {
 			lista_titulos[i] = titulos[a];
+			aux[i] = a;
+		}
+		else {
+			i--;
+		}
+	}
+
+	const int tam_r = 4, tam2_r = 10;
+	string titulos_r[] = { "Vogue", "ELLE", "V Magazine", "Capricho", "Caras", "Veja SP", "A Sentinela", "Despertai", "Crusoé Revista Digital Semanal", "Manequim" };
+
+	srand(time(NULL));
+	for (int i = 0; i < tam_r; i++) {
+		int aux[tam_r] = { 0 };
+
+		int a = rand() % tam2_r;
+		if (aux[i] == 0) {
+			titulos_revistas[i] = titulos_r[a];
 			aux[i] = a;
 		}
 		else {
@@ -321,22 +430,22 @@ void gerar_mes(int lista_mes[]) {
 }
 
 // gera cadastros iniciais de livros
-void gerar_livros(Livro& a, Editora b, Autor c, string assunto, string titulo, int ano) {
+void gerar_livros(Livro& a, Editora b, Autor c, string assunto, string titulo, int ano, int id) {
 	a.titulo = titulo;
 	a.autor = c;
 	a.editora = b;
 	a.publicacao = ano;
 	a.assunto = assunto;
-	//a.identificador;
+	a.id = id;
 }
 
-void gerar_revistas(Revista& r, Editora b, string assunto, string titulo, int ano, int mes) {
+void gerar_revistas(Revista& r, Editora b, string assunto, int ano, int mes, string titulo, int id) {
 	r.titulo = titulo;
 	r.editora = b;
 	r.publicacao.mes = mes;
 	r.publicacao.ano = ano;
 	r.assunto = assunto;
-	//r.identificador;
+	r.id = id;
 }
 
 // Função para verificar se um livro está disponível para empréstimo
@@ -362,6 +471,7 @@ void submenu_cadastro() {
 		<< "[2] - Revista" << endl
 		<< "[3] - Autor" << endl
 		<< "[4] - Editora" << endl
+		<< "[5] - Usuario" << endl
 		<< "[0] - Voltar" << endl
 		<< endl
 		<< "Digite a opcao desejada: ";
@@ -373,6 +483,15 @@ void submenu_alteracao() {
 		<< "[2] - Revista" << endl
 		<< "[3] - Autor" << endl
 		<< "[4] - Editora" << endl
+		<< "[0] - Voltar" << endl
+		<< endl
+		<< "Digite a opcao desejada: ";
+}
+
+void submenu_retirada() {
+	cout << "\n - - - - - RETIRADA - - - - -" << endl //FALTA MUDAR O STATUS DE DISPONIVEL DO LIVRO OU REVISTA QUANDO FOR RETIRADO
+		<< "[1] - Livro" << endl
+		<< "[2] - Revista" << endl
 		<< "[0] - Voltar" << endl
 		<< endl
 		<< "Digite a opcao desejada: ";
@@ -415,35 +534,44 @@ int main()
 	//listas
 	Autor lista_autores[100];
 	Editora lista_editoras[100];
-	string lista_assuntos[100];
-	string lista_titulos[100];
-	Usuario usuarios[100];
+	string lista_assuntos[100], lista_titulos[100], titulos_revistas[100];
 	Livro lista_livros[100];
 	Revista lista_revistas[100];
+	Usuario lista_usuarios[100];
 	int lista_ano[10], lista_mes[10];
 
 	//outras variaveis
 	int opcao, min_opcao, max_opcao, escolha;
-	int cont_livros = 4, cont_revistas = 3, cont_autor = 4, cont_editora = 8, cont_assunto = 8;
+	int cont_livros = 4, cont_revistas = 3, cont_autor = 4, cont_editora = 8, cont_assunto = 8, cont_usuario = 0, soma = 0;;
 	char resposta;
 	bool flag = false;
 	Autor autor;
 	Editora ed;
 	string aux;
+	Usuario usuario;
+	Data data;
+
+	//gerar IDs iniciais
+	int id_livro = gerar_ID(1001);
+	int id_revista = gerar_ID(2001);
+	int id_usuario = gerar_ID(3001);
 
 	gerar_autores(lista_autores); //cadastro de 5 autores 
 	gerar_editoras(lista_editoras); //cadastro de 9 editoras 
 	gerar_assuntos(lista_assuntos); //cadastro de 15 assuntos 
-	gerar_titulos(lista_titulos); //cadastro de 10 assuntos 
+	gerar_titulos(lista_titulos, titulos_revistas); //cadastro de 9 titulos
 	gerar_ano(lista_ano); //cadastro de 10 anos aleatorios
 	gerar_mes(lista_mes); //cadastro de 10 meses aleatorios
 
+
 	for (int i = 0; i < 5; i++) { //cadastro de 5 livros aleatorios
-		gerar_livros(lista_livros[i], lista_editoras[i], lista_autores[i], lista_assuntos[i], lista_titulos[i], lista_ano[i]);
+		gerar_livros(lista_livros[i], lista_editoras[i], lista_autores[i], lista_assuntos[i], lista_titulos[i], lista_ano[i], id_livro);
+		id_livro++;
 	}
 
 	for (int i = 0; i < 4; i++) { //cadastro de 4 revistas aleatorias
-		gerar_revistas(lista_revistas[i], lista_editoras[i+5], lista_assuntos[i+5], lista_titulos[i], lista_ano[i+5], lista_mes[i]);
+		gerar_revistas(lista_revistas[i], lista_editoras[i + 5], lista_assuntos[i + 5], lista_ano[i + 5], lista_mes[i], titulos_revistas[i], id_revista);
+		id_revista++;
 	}
 
 	int escolha_menu_principal = 0;
@@ -577,8 +705,33 @@ int main()
 					} while (resposta == 's' || resposta == 'S');
 					system("cls");
 					break;
+
+				case 5: // cadastrar usuario
+					do {
+						cont_usuario++;
+						Usuario novo_usuario = cadastrar_usuario();
+						flag = false;
+
+						for (int i = 1; i <= cont_usuario; i++) {
+							if (lista_usuarios[i].nome == novo_usuario.nome) { // verifica se o usuário já está cadastrado
+								cout << "\nUsuario ja cadastrado." << endl;
+								cont_usuario--;
+								flag = true;
+								break;
+							}
+						}
+
+						if (!flag) {
+							lista_usuarios[cont_usuario] = novo_usuario;
+						}
+
+						cout << "\nDeseja cadastrar mais um usuario (s/n)? ";
+						cin >> resposta;
+					} while (resposta == 's' || resposta == 'S'); //loop continua enquanto o usuario desejar cadastrar mais usuarios
+					system("cls");
+					break;
 				}
-			} while (opcao_invalida(escolha_submenu, 0, 4));
+			} while (opcao_invalida(escolha_submenu, 0, 5));
 			break;
 
 		case 2: // alteracao de material
@@ -692,12 +845,106 @@ int main()
 					break;
 				}
 			} while (opcao_invalida(escolha_submenu, 0, 4));
-			system("pause");
 			system("cls");
 			break;
 
 		case 3: // retirada
+			do {
+				submenu_retirada();
+				cin >> escolha_submenu;
+			} while (opcao_invalida(escolha_submenu, 0, 2));
 
+			switch (escolha_submenu)
+			{
+			case 0:
+				system("cls");
+				break;
+
+			case 1:
+				system("cls");
+				cout << "\nLista de Livros (id e titulo): " << endl;
+				for (int i = 0; i < cont_livros + 1; i++) {
+					cout << "\t[" << lista_livros[i].id << "] ";
+					cout << lista_livros[i].titulo;
+					cout << endl;
+				}
+				cout << "\nInforme o id do livro que deseja retirar: ";
+				cin >> escolha;
+
+				cout << "\nInforme seu id de usuario: ";
+				cin >> usuario.id;
+
+				cout << "\nInforme a data de retirada: " << endl;
+				data = ler_data();
+
+				soma = 0;
+				flag = false;
+				for (int i = 0; i < cont_usuario + 1; i++) {
+					if (lista_usuarios[i].id == usuario.id) { //encontra na lista de usuarios cadastrados o usuario correspondente ao id informado
+						flag = true;
+
+						if (atraso(lista_usuarios[i]) == true) {
+							break;
+						}
+						soma = qtd_retiradas(lista_usuarios[i]);
+						lista_usuarios[i].retirados[soma].id = escolha; //atualiza lista de retirados do usuario
+						lista_usuarios[i].retirados[soma].retirada = data;
+						cout << "\nItem retirado com sucesso!" << endl;
+						cout << "Voce tem 7 dias para realizar a leitura do material" << endl;
+						cout << "\tData de devolucao: " << endl;// data_devolucao(); FAZER FUNCAO PRA CALCULAR DATA DE DEVOLUCAO
+
+						for (int i = 0; i < cont_livros; i++) {
+							if (lista_livros[i].id == escolha) {
+								lista_livros[i].disponivel = false; //livro passa a ter status de indisponivel
+							}
+						}
+					}
+				}
+				if (flag == false) { //caso nao encontre o id do usuario na lista de usuarios cadastrados
+					cout << "\nId de Usuario não foi encontrada, verifique se ja realizou cadastro ou se digitou a id corretamente!" << endl;
+				}
+				break;
+
+			case 2:
+				system("cls");
+				cout << "\nLista de Revistas (id e titulo): " << endl;
+				for (int i = 0; i < cont_revistas + 1; i++) {
+					cout << "\t[" << lista_revistas[i].id << "] ";
+					cout << lista_revistas[i].titulo;
+					cout << endl;
+				}
+				cout << "\nInforme o id da revista que deseja retirar: ";
+				cin >> escolha;
+
+				cout << "\nInforme seu id de usuario: ";
+				cin >> usuario.id;
+
+				cout << "Informe a data de retirada: ";
+				data = ler_data();
+
+				soma = 0;
+				flag = false;
+				for (int i = 0; i < cont_usuario + 1; i++) {
+					if (lista_usuarios[i].id == usuario.id) { //encontra na lista de usuarios cadastrados o usuario correspondente ao id informado
+						flag = true;
+
+						if (atraso(lista_usuarios[i]) == true) {
+							break;
+						}
+						soma = qtd_retiradas(lista_usuarios[i]);
+						lista_usuarios[i].retirados[soma].id = escolha; //atualiza lista de retirados do usuario
+						lista_usuarios[i].retirados[soma].retirada = data;
+						cout << "\nItem retirado com sucesso!" << endl;
+						cout << "Voce tem 7 dias para realizar a leitura do material" << endl;
+						cout << "\tData de devolucao: " << endl; //data_devolucao(); FAZER FUNCAO PRA CALCULAR DATA DE DEVOLUCAO
+					}
+				}
+				if (flag == false) {
+					cout << "\nId de Usuario não foi encontrada, verifique se ja realizou cadastro ou se digitou a id corretamente!" << endl;
+				}
+				break;
+			}
+			system("cls");
 			break;
 
 		case 4: // consultar acervo
@@ -714,12 +961,15 @@ int main()
 			if (escolha_submenu == 1) {
 				do {
 					cout << "\nDeseja filtrar sua pesquisa por: " << endl
-						<< "[1] - Livros" << endl
-						<< "[2] - Revistas" << endl
-						<< "[3] - Autor" << endl
-						<< "[4] - Editora" << endl
-						<< "[5] - Assunto" << endl
-						<< "[0] - Voltar" << endl;
+						<< "\n[1] - Livros" << endl
+						<< "[2] - Disponibilidade" << endl
+						<< "[3] - Revistas" << endl
+						<< "[4] - Autor" << endl
+						<< "[5] - Editora" << endl
+						<< "[6] - Assunto" << endl
+						<< "[7] - Usuario" << endl
+						<< "[0] - Voltar" << endl
+						<< "\nEscolha uma opcao: ";
 					cin >> escolha_submenu;
 
 					switch (escolha_submenu) {
@@ -728,16 +978,35 @@ int main()
 						break;
 
 					case 1: //mostrar todos os livros
+						cout << "\n - - - - - LISTAGEM DE LIVROS - - - - -" << endl;
 						for (int i = 0; i < cont_livros + 1; i++) {
 							mostrar_livro(lista_livros[i]);
 						}
 						break;
 
-						//case 2: //mostrar todas as revistas
-							//mostrar_revistas(lista_revistas[i]);
-						   // break;
+					case 2: // mostrar todos os livros e revistas disponiveis
+						cout << "\nLista de livros disponiveis:\n" << endl;
+						for (int i = 0; i < cont_livros + 1; i++) {
+							if (lista_livros[i].disponivel) {
+								mostrar_livro(lista_livros[i]);
 
-					case 3: //mostrar livros de um autor especifico
+							}
+						}
+						for (int i = 0; i < cont_livros + 1; i++) {
+							if (lista_revistas[i].disponivel) {
+								mostrar_revista(lista_revistas[i]);
+							}
+						}
+						break;
+
+					case 3: //mostrar todas as revistas
+						cout << "\n - - - - - LISTAGEM DE REVISTAS - - - - -" << endl;
+						for (int i = 0; i < cont_livros + 1; i++) {
+							mostrar_revista(lista_revistas[i]);
+						}
+						break;
+
+					case 4: //mostrar livros de um autor especifico
 						cout << "\nLista atual de autores cadastrados: " << endl;
 						for (int i = 0; i < cont_autor + 1; i++) {
 							cout << "\t[" << i + 1 << "] ";
@@ -749,7 +1018,7 @@ int main()
 
 						flag = false;
 						for (int i = 0; i < cont_livros + 1; i++) {
-							if (lista_livros[i].autor.nome == autor.nome && lista_livros[i].autor.sobrenome == autor.sobrenome) {
+							if (lista_livros[i].autor.nome == autor.nome && lista_livros[i].autor.sobrenome == autor.sobrenome) { //verifica livros com o autor procurado
 								mostrar_livro(lista_livros[i]);
 								flag = true;
 							}
@@ -759,7 +1028,7 @@ int main()
 						}
 						break;
 
-					case 4: //mostrar livros e revistas de uma editora
+					case 5: //mostrar livros e revistas de uma editora
 						cout << "\nLista atual de editoras cadastradas: " << endl;
 						for (int i = 0; i < cont_editora + 1; i++) {
 							cout << "\t[" << i + 1 << "] ";
@@ -771,25 +1040,33 @@ int main()
 
 						flag = false;
 						for (int i = 0; i < cont_livros + 1; i++) {
-							if (lista_livros[i].editora.nome == ed.nome && lista_livros[i].editora.local == ed.local) {
+							if (lista_livros[i].editora.nome == ed.nome && lista_livros[i].editora.local == ed.local) { //verifica se existem livros da editora procurada
 								mostrar_livro(lista_livros[i]);
 								flag = true;
 							}
-							//ADD PARTE DAS REVISTAS
+							else if (lista_revistas[i].editora.nome == ed.nome && lista_revistas[i].editora.local == ed.local) { //verifica as revistas
+								mostrar_revista(lista_revistas[i]);
+								flag = true;
+							}
 						}
 						if (flag == false) {
 							cout << "\nNao existem livros ou revistas cadastrados com esta Editora" << endl;
 						}
 						break;
 
-					case 5: //mostrar livros e revistas de um assunto
+					case 6: //mostrar livros e revistas de um assunto
 						cin.ignore();
-						cout << "Qual assunto deseja encontrar? "; //SO FUNCIONA QUANDO A FRASE SO TEM UMA PALAVRA
-						cin >> aux;
+						cout << "Qual assunto deseja encontrar? ";
+						getline(cin, aux);
+
 						flag = false;
 						for (int i = 0; i < cont_livros + 1; i++) {
-							if (lista_livros[i].assunto == aux) {
+							if (lista_livros[i].assunto == aux) { //verifica se existem livros relacionados ao assunto procurado
 								mostrar_livro(lista_livros[i]);
+								flag = true;
+							}
+							else if (lista_revistas[i].assunto == aux) { //verifica as revistas
+								mostrar_revista(lista_revistas[i]);
 								flag = true;
 							}
 						}
@@ -797,7 +1074,36 @@ int main()
 							cout << "\nNao existem livros ou revistas cadastrados com este assunto" << endl;
 						}
 						break;
+
+					case 7:
+						cout << "ID do usuario: ";
+						cin >> usuario.id;
+
+						flag = false;
+
+						for (int i = 0; i < cont_usuario + 1; i++) {
+							if (lista_usuarios[i].id == usuario.id) {
+								mostrar_usuario(lista_usuarios[i]);
+								flag = true;
+							}
+						}
+						for (int i = 0; i < cont_usuario + 1; i++) {
+							if (lista_usuarios[i].retirados == usuario.retirados) {
+								mostrar_usuario(lista_usuarios[i]);
+								flag = true;
+
+								if (atraso(lista_usuarios[i]) == true) {
+									break;
+								}
+							}
+						}
+
+						if (flag == false) {
+							cout << "\nNao existem usuarios cadastrados com este ID" << endl;
+						}
+						break;
 					}
+					break;
 				} while (opcao_invalida(escolha_submenu, 0, 5));
 			}
 
@@ -805,10 +1111,11 @@ int main()
 				cout << "\n - - - - - LISTAGEM COMPLETA - - - - -" << endl;
 				for (int i = 0; i < cont_livros + 1; i++) {
 					mostrar_livro(lista_livros[i]);
-					//mostrar_revista(lista_revistas[i]);
+					mostrar_revista(lista_revistas[i]);
+					mostrar_usuario(lista_usuarios[i]);
 				}
 			}
-
+			cout << endl;
 			system("pause");
 			system("cls");
 			break;
@@ -821,8 +1128,17 @@ int main()
 
 			switch (escolha_submenu)
 			{
+			case 0:
+				system("cls");
+				break;
+
 			case 1:
-				// Cadastro 
+				cout << "\n - - - - - CADASTRE-SE - - - - -" << endl;
+				lista_usuarios[cont_usuario] = cadastrar_usuario();
+				cout << "\nCadastro realizado com sucesso!" << endl;
+				cont_usuario++;
+				system("pause");
+				system("cls");
 				break;
 
 			case 2:
@@ -830,18 +1146,42 @@ int main()
 				break;
 
 			case 3:
-				// Historico de retiradas
+				cout << "- - - - - HISTORICO DE RETIRADA - - - - -" << endl;
+				cout << "\nInforme o id do usuario: ";
+				cin >> usuario.id;
+
+				soma = 0;
+				flag = false;
+				for (int i = 0; i < cont_usuario + 1; i++) {
+					if (lista_usuarios[i].id == usuario.id) { //encontra na lista de usuarios cadastrados o usuario correspondente ao id informado
+						flag = true;
+						soma = qtd_retiradas(lista_usuarios[i]);
+
+						for (int j = 0; j < soma; j++) {
+							if (lista_usuarios[i].retirados[j].id == lista_livros[j].id) { //mostra livros retirados
+								mostrar_livro(lista_livros[j]);
+								//cout << "\tData de retirada: " << lista_usuarios[i].retirados[j].retirada;
+
+							}
+						}
+						for (int j = 0; j < soma; j++) {
+							if (lista_usuarios[i].retirados[j].id == lista_revistas[j].id) { //mostra revistas retiradas
+								mostrar_revista(lista_revistas[j]);
+								//cout << "\tData de retirada: " 
+							}
+						}
+					}
+				}
+				if (flag == false) {
+					cout << "\nId de Usuario não foi encontrada, verifique existe cadastro ou se digitou a id corretamente" << endl;
+				}
+				system("cls");
 				break;
 
 			case 4:
 				// Listagem de Usuarios
 				break;
-
-			case 0:
-				system("cls");
-				break;
 			}
-
 			break;
 		}
 	}

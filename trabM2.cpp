@@ -1016,9 +1016,9 @@ int main()
 						if (lista_livros[i].id == escolha) {
 							flag = true;
 						}
-						if (flag == false) {
-							cout << "\nId de Livro nao foi encontrada, verifique se digitou o ID corretamente!" << endl;
-						}
+					}
+					if (flag == false) {
+						cout << "\nId de Livro nao foi encontrada, verifique se digitou o ID corretamente!" << endl;
 					}
 				} while (flag == false);
 
@@ -1030,7 +1030,7 @@ int main()
 
 				soma = 0;
 				flag = false;
-				for (int i = 0; i < cont_usuario; i++) {
+				for (int i = 0; i < cont_usuario + 1; i++) {
 					if (lista_usuarios[i].id == usuario.id) {
 						flag = true;
 
@@ -1074,19 +1074,20 @@ int main()
 					cout << "\t[" << lista_revistas[i].id << "] ";
 					cout << lista_revistas[i].titulo << endl;
 				}
+				do {
+					cout << "\nInforme o ID da revista que deseja retirar: ";
+					cin >> escolha;
 
-				cout << "\nInforme o ID da revista que deseja retirar: ";
-				cin >> escolha;
-
-				bool flag = false;
-				for (int i = 0; i < cont_revistas; i++) {
-					if (lista_revistas[i].id == escolha) {
-						flag = true;
+					flag = false;
+					for (int i = 0; i < cont_revistas; i++) {
+						if (lista_revistas[i].id == escolha) {
+							flag = true;
+						}
 					}
 					if (flag == false) {
 						cout << "\nID de Revista nao foi encontrado, verifique se digitou o ID corretamente!" << endl;
 					}
-				}
+				} while (flag == false);
 
 				cout << "\nInforme seu ID de usuario: ";
 				cin >> usuario.id;
@@ -1096,7 +1097,7 @@ int main()
 
 				soma = 0;
 				flag = false;
-				for (int i = 0; i < cont_usuario; i++) {
+				for (int i = 0; i < cont_usuario + 1; i++) {
 					if (lista_usuarios[i].id == usuario.id) { //encontra na lista de usuarios cadastrados o usuario correspondente ao id informado
 						flag = true;
 
@@ -1297,10 +1298,10 @@ int main()
 
 			case 1:
 				cout << "\n - - - - - CADASTRE-SE - - - - -" << endl;
+				cont_usuario++;
 				lista_usuarios[cont_usuario] = cadastrar_usuario(id_usuario);
 				cout << "\nCadastro realizado com sucesso!" << endl;
 				id_usuario++;
-				cont_usuario++;
 				system("pause");
 				system("cls");
 				break;
@@ -1324,7 +1325,7 @@ int main()
 			case 3:
 				system("cls");
 				cout << "- - - - - HISTORICO DE RETIRADA - - - - -" << endl;
-				cout << "\nInforme o id do usuario: ";
+				cout << "\nInforme o ID do usuario: ";
 				cin >> usuario.id;
 
 				soma = 0;
@@ -1353,7 +1354,7 @@ int main()
 					}
 				}
 				if (flag == false) {
-					cout << "\nId de Usuario não foi encontrada, verifique existe cadastro ou se digitou a id corretamente" << endl;
+					cout << "\nID de Usuario não foi encontrado, verifique existe cadastro ou se digitou o ID corretamente" << endl;
 				}
 				system("pause");
 				system("cls");

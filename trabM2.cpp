@@ -1002,7 +1002,7 @@ int main()
 			case 1:
 				cout << "\nLista de Livros (Id - Titulo)" << endl;
 
-				for (int i = 0; i < cont_livros; i++) {
+				for (int i = 0; i < cont_livros + 1; i++) {
 					cout << "\t[" << lista_livros[i].id << "] - ";
 					cout << lista_livros[i].titulo << endl;
 				}
@@ -1012,7 +1012,7 @@ int main()
 					cin >> escolha;
 
 					flag = false;
-					for (int i = 0; i < cont_livros; i++) {
+					for (int i = 0; i < cont_livros + 1; i++) {
 						if (lista_livros[i].id == escolha) {
 							flag = true;
 						}
@@ -1042,7 +1042,7 @@ int main()
 							lista_usuarios[i].retirados[soma].retirada.mes = data.mes;
 							lista_usuarios[i].retirados[soma].retirada.ano = data.ano;
 							
-							for (int i = 0; i < cont_livros; i++) {
+							for (int i = 0; i < cont_livros + 1; i++) {
 								if (lista_livros[i].id == escolha) {
 									lista_livros[i].disponivel = false; //passa a colocar o livro como indisponivel
 								}
@@ -1050,12 +1050,6 @@ int main()
 							cout << "\nItem retirado com sucesso!" << endl;
 							cout << "Voce tem 7 dias para realizar a leitura do material" << endl;
 							cout << "\tData de devolucao: "; // << data_devolucao() << endl;
-
-							for (int i = 0; i < cont_livros; i++) {
-								if (lista_livros[i].id == livro.id) {
-									lista_livros[i].disponivel = false;
-								}
-							}
 						}
 						else if (atraso(lista_usuarios[i])) {
 							break;
@@ -1070,7 +1064,7 @@ int main()
 
 			case 2:
 				cout << "\nLista de Revistas (id e titulo): " << endl;
-				for (int i = 0; i < cont_revistas; i++) {
+				for (int i = 0; i < cont_revistas + 1; i++) {
 					cout << "\t[" << lista_revistas[i].id << "] ";
 					cout << lista_revistas[i].titulo << endl;
 				}
@@ -1079,7 +1073,7 @@ int main()
 					cin >> escolha;
 
 					flag = false;
-					for (int i = 0; i < cont_revistas; i++) {
+					for (int i = 0; i < cont_revistas + 1; i++) {
 						if (lista_revistas[i].id == escolha) {
 							flag = true;
 						}
@@ -1109,7 +1103,7 @@ int main()
 							lista_usuarios[i].retirados[soma].retirada.mes = data.mes;
 							lista_usuarios[i].retirados[soma].retirada.ano = data.ano;
 
-							for (int i = 0; i < cont_livros; i++) {
+							for (int i = 0; i < cont_revistas + 1; i++) {
 								if (lista_revistas[i].id == escolha) {
 									lista_revistas[i].disponivel = false; //passa a colocar o livro como indisponivel
 								}

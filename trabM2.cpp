@@ -1074,7 +1074,7 @@ int main()
 
 						if (atraso(lista_usuarios[i]) == false) {
 							soma = qtd_retiradas(lista_usuarios[i]);
-							lista_usuarios[i].retirados[soma].id = livro.id;
+							lista_usuarios[i].retirados[soma].id = escolha;
 
 							lista_usuarios[i].retirados[soma].retirada.dia = data.dia;
 							lista_usuarios[i].retirados[soma].retirada.mes = data.mes;
@@ -1372,7 +1372,7 @@ int main()
 						soma = qtd_retiradas(lista_usuarios[i]);
 
 						for (int j = 0; j < soma; j++) {
-							for (int k = 0; k < cont_livros; k++) {
+							for (int k = 0; k < cont_livros + 1; k++) {
 								if (lista_usuarios[i].retirados[j].id == lista_livros[k].id) { //mostra livros retirados
 									mostrar_livro(lista_livros[k]);
 									//cout << "\tData de retirada: " << lista_usuarios[i].retirados[j].retirada;
@@ -1380,7 +1380,7 @@ int main()
 							}
 						}
 						for (int j = 0; j < soma; j++) {
-							for (int k = 0; k < cont_revistas; k++) {
+							for (int k = 0; k < cont_revistas + 1; k++) {
 								if (lista_usuarios[i].retirados[j].id == lista_revistas[k].id) { //mostra revistas retiradas
 									mostrar_revista(lista_revistas[k]);
 									//cout << "\tData de retirada: "

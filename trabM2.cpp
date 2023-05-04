@@ -389,7 +389,7 @@ void gerar_titulos(string lista_titulos[], string titulos_revistas[]) {
 	}
 	const int tam_r = 4, tam2_r = 10;
 	int aux2[tam_r] = { 0 }, b = 0;
-	string titulos_r[] = { "Vogue", "ELLE", "V Magazine", "Capricho", "Caras", "Veja SP", "A Sentinela", "Despertai", "Crusoé Revista Digital Semanal", "Manequim" };
+	string titulos_r[] = { "Vogue", "ELLE", "V Magazine", "Capricho", "Caras", "Veja SP", "A Sentinela", "Despertai", "Crusoe Revista Digital Semanal", "Manequim" };
 
 	srand(time(NULL));
 	for (int i = 0; i < tam_r; i++) {
@@ -928,12 +928,12 @@ int main()
 
 						flag = false;
 						for (int i = 0; i < cont_autor + 1; i++) { //verifica se ja existe cadastro deste autor
-							if (lista_autores[cont_autor].nome == lista_autores[i].nome && lista_autores[cont_autor].sobrenome == lista_autores[i].sobrenome) {
+							if (autor.nome == lista_autores[i].nome && autor.sobrenome == lista_autores[i].sobrenome) {
 								cout << "\nAutor ja cadastrado no sistema" << endl;
 								flag = true;
 							}
 						}
-						if (flag = false) {
+						if (flag == false) {
 							lista_autores[cont_autor].nome = autor.nome; //se nao tiver cadastro ainda, atualiza a lista de autores
 							lista_autores[cont_autor].sobrenome = autor.sobrenome;
 
@@ -970,13 +970,14 @@ int main()
 						ed = ler_editora();
 
 						flag = false;
-						for (int i = 0; i < cont_editora + 1; i++) { //verifica se ja existe cadastro desta editora
-							if (lista_editoras[cont_editora].nome == lista_editoras[i].nome && lista_editoras[cont_editora].local == lista_editoras[i].local) {
+						for (int i = 0; i < cont_editora + 1; i++) { //verifica se ja existe cadastro deste nome de editora
+							if (ed.nome == lista_editoras[i].nome) {
 								cout << "\nEditora ja cadastrada no sistema" << endl;
 								flag = true;
+								break;
 							}
 						}
-						if (flag = false) {
+						if (flag == false) {
 							lista_editoras[cont_editora].nome = ed.nome; //se nao tiver cadastro ainda, atualiza a lista de editoras
 							lista_editoras[cont_editora].local = ed.local;
 
@@ -1042,7 +1043,7 @@ int main()
 					}
 					break;
 
-				case 2:
+				case 2: //alterar revista
 					system("cls");
 					set_color(5);
 					cout << "\nRevistas cadastrados atualmente (id e titulo): \n" << endl;
@@ -1077,7 +1078,7 @@ int main()
 				case 3: //alterar autor
 					system("cls");
 					set_color(5);
-					cout << "\nLista atual de autores cadastrados: \n\n" << endl;
+					cout << "\nLista atual de autores cadastrados: \n" << endl;
 					set_color(7);
 					for (int i = 0; i < cont_autor + 1; i++) {
 						cout << "\t[" << i + 1 << "] ";
@@ -1086,20 +1087,25 @@ int main()
 					escolha = opcao_invalida("\nEscolha a opcao que deseja alterar", 1, cont_autor + 1);
 
 					cin.ignore();
+					autor = lista_autores[escolha - 1]; //salva o autor antes da mudança
 					lista_autores[escolha - 1] = ler_autor();
 					set_color(2);
 					cout << "\n\tAutor alterado com sucesso!\n" << endl;
 					set_color(7);
 
 					//atualiza lista de livros tambem
-					//lista_livros[escolha - 1].autor.nome = lista_autores[escolha - 1].nome; //PRECISA VERIFICAR A LISTA TODA DE LIVROS 
-					//lista_livros[escolha - 1].autor.sobrenome = lista_autores[escolha - 1].sobrenome;
+					for (int i = 0; i < cont_livros + 1; i++) {
+						if (lista_livros[i].autor.nome == autor.nome && lista_livros[i].autor.sobrenome == autor.sobrenome) {
+							lista_livros[i].autor.nome = lista_autores[escolha - 1].nome;
+							lista_livros[i].autor.sobrenome = lista_autores[escolha - 1].sobrenome;
+						}
+					}
 					break;
 
 				case 4: //alterar editora
 					system("cls");
 					set_color(5);
-					cout << "\nLista atual de editoras cadastradas: \n\n" << endl;
+					cout << "\nLista atual de editoras cadastradas: \n" << endl;
 					set_color(7);
 					for (int i = 0; i < cont_editora + 1; i++) {
 						cout << "\t[" << i + 1 << "] ";
@@ -1108,14 +1114,24 @@ int main()
 					escolha = opcao_invalida("\nEscolha a opcao que deseja alterar", 1, cont_editora + 1);
 
 					cin.ignore();
+					ed = lista_editoras[escolha - 1];
 					lista_editoras[escolha - 1] = ler_editora();
 					set_color(2);
 					cout << "\n\tEditora alterada com sucesso!\n" << endl;
 					set_color(7);
 
-					//atualiza lista de livros tambem
-					//lista_livros[escolha - 1].editora.nome = lista_editoras[escolha - 1].nome;  //PRECISA VERIFICAR A LISTA TODA DE LIVROS 
-					//lista_livros[escolha - 1].editora.local = lista_editoras[escolha - 1].local;
+					for (int i = 0; i < cont_livros + 1; i++) { //atualiza lista de livros com a editora alterada
+						if (lista_livros[i].editora.nome == ed.nome && lista_livros[i].editora.local == ed.local) {
+							lista_livros[i].editora.nome = lista_editoras[escolha - 1].nome;
+							lista_livros[i].editora.local = lista_editoras[escolha - 1].local;
+						}
+					}
+					for (int i = 0; i < cont_revistas + 1; i++) { //atualiza lista de revistas com a editora alterada
+						if (lista_revistas[i].editora.nome == ed.nome && lista_revistas[i].editora.local == ed.local) {
+							lista_revistas[i].editora.nome = lista_editoras[escolha - 1].nome;
+							lista_revistas[i].editora.local = lista_editoras[escolha - 1].local;
+						}
+					}
 					break;
 				}
 				system("cls");

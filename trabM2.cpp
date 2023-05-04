@@ -137,14 +137,11 @@ Editora ler_editora() {
 	return editora;
 }
 
-Usuario cadastrar_usuario(int id) {
+Usuario cadastrar_usuario() {
 	Usuario u;
 	cin.ignore();
 	cout << "\nNome Completo: ";
 	getline(cin, u.nome);
-
-	u.id = id;
-	cout << "Seu identificador de usuario: " << u.id;
 
 	return u;
 }
@@ -987,33 +984,6 @@ int main()
 					} while (resposta == 's' || resposta == 'S');
 					system("cls");
 					break;
-
-				case 5: // cadastrar usuario
-					do {
-						cont_usuario++;
-						id_usuario++;
-						Usuario novo_usuario = cadastrar_usuario(id_usuario);
-						flag = false;
-
-						for (int i = 1; i <= cont_usuario; i++) {
-							if (lista_usuarios[i].nome == novo_usuario.nome) { // verifica se o usuário já está cadastrado
-								cout << "\nUsuario ja cadastrado." << endl;
-								cont_usuario--;
-								flag = true;
-								break;
-							}
-						}
-						if (!flag) {
-							lista_usuarios[cont_usuario] = novo_usuario;
-						}
-						set_color(2);
-						cout << "\nUsuario cadastrado com sucesso!" << endl;
-						set_color(7);
-						cout << "\nDeseja cadastrar mais um usuario (s/n)? ";
-						cin >> resposta;
-					} while (resposta == 's' || resposta == 'S'); //loop continua enquanto o usuario desejar cadastrar mais usuarios
-					system("cls");
-					break;
 				}
 			} while (opcao_invalida(escolha_submenu, 0, 5));
 			break;
@@ -1520,16 +1490,32 @@ int main()
 				set_color(5);
 				cout << "\n - - - - - CADASTRE-SE - - - - -\n" << endl;
 				set_color(7);
+	
+				usuario = cadastrar_usuario();
 				cont_usuario++;
-				lista_usuarios[cont_usuario] = cadastrar_usuario(id_usuario);
+
+				flag = false;
+				for (int i = 0; i <= cont_usuario; i++) {
+					if (lista_usuarios[i].nome == usuario.nome) { // verifica se o usuário já está cadastrado
+						cout << "\nUsuario ja cadastrado." << endl;
+						cont_usuario--;
+						flag = true;
+						break;
+					}
+				}
+				if (!flag) {
+					lista_usuarios[cont_usuario].nome = usuario.nome;
+					lista_usuarios[cont_usuario].id = id_usuario;
+					cout << "Seu ID de usuario eh: " << lista_usuarios[cont_usuario].id;
+					id_usuario++;
+				}
 				set_color(2);
-				cout << "\n\nCadastro realizado com sucesso!\n" << endl;
+				cout << "\nUsuario cadastrado com sucesso!" << endl;
 				set_color(7);
-				id_usuario++;
 				system("pause");
 				system("cls");
 				break;
-
+			
 			case 2:
 				system("cls");
 				set_color(4);

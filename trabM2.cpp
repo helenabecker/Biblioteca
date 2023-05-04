@@ -91,6 +91,30 @@ int opcao_invalida(string frase, int min, int max) {
 	return op;
 }
 
+bool verificador_autor(int cont_autor, Autor lista_autores[], Autor autor) { //verifica se ja existe cadastro deste autor
+	for (int i = 0; i < cont_autor + 1; i++) { 
+		if (autor.nome == lista_autores[i].nome && autor.sobrenome == lista_autores[i].sobrenome) {
+			set_color(4);
+			cout << "\n\tAutor ja cadastrado no sistema" << endl;
+			return true;
+			break;
+		}
+	}
+	return false;
+}
+
+bool verificador_editora(int cont_editora, Editora lista_editoras[], Editora ed) { //verifica se ja existe cadastro desta editora
+	for (int i = 0; i < cont_editora + 1; i++) { 
+		if (ed.nome == lista_editoras[i].nome && ed.local == lista_editoras[i].local) {
+			set_color(4);
+			cout << "\n\tEditora ja cadastrada no sistema" << endl;
+			return true;
+			break;
+		}
+	}
+	return false;
+}
+
 Data ler_data() {
 	Data d;
 	do {
@@ -663,62 +687,62 @@ void exibir_menu_principal() {
 		<< "[3] - Retirada" << endl
 		<< "[4] - Consultar Acervo" << endl
 		<< "[5] - Central do Usuario" << endl
-		<< "[0] - Sair" << endl << endl;
+		<< "[0] - Sair" << endl;
 }
 
 void submenu_cadastro() {
-	set_color(5);
+	set_color(6);
 	cout << "\n - - - - - CADASTRO - - - - -\n" << endl;
 	set_color(7);
 	cout << "[1] - Livro" << endl
 		<< "[2] - Revista" << endl
 		<< "[3] - Autor" << endl
 		<< "[4] - Editora" << endl
-		<< "[0] - Voltar" << endl << endl;
+		<< "[0] - Voltar" << endl;
 }
 
 void submenu_alteracao() {
-	set_color(5);
+	set_color(6);
 	cout << "\n - - - - - ALTERACAO - - - - -\n" << endl;
 	set_color(7);
 	cout << "[1] - Livro" << endl
 		<< "[2] - Revista" << endl
 		<< "[3] - Autor" << endl
 		<< "[4] - Editora" << endl
-		<< "[0] - Voltar" << endl << endl;
+		<< "[0] - Voltar" << endl;
 }
 
 void submenu_retirada() {
-	set_color(5);
+	set_color(6);
 	cout << "\n - - - - - RETIRADA - - - - -\n" << endl; //FALTA MUDAR O STATUS DE DISPONIVEL DO LIVRO OU REVISTA QUANDO FOR RETIRADO
 	set_color(7);
 	cout << "[1] - Livro" << endl
 		<< "[2] - Revista" << endl
-		<< "[0] - Voltar" << endl << endl;
+		<< "[0] - Voltar" << endl;
 }
 
 void submenu_acervo() {
-	set_color(5);
+	set_color(6);
 	cout << "\n - - - - - CONSULTAR ACERVO - - - - -\n" << endl;
 	set_color(7);
 	cout << "[1] - Pesquisa Filtrada" << endl
 		<< "[2] - Listagem Completa" << endl
-		<< "[0] - Voltar" << endl << endl;
+		<< "[0] - Voltar" << endl;
 }
 
 void submenu_central_usuario() {
-	set_color(5);
+	set_color(6);
 	cout << "\n - - - - - CENTRAL DO USUARIO - - - - -\n" << endl;
 	set_color(7);
 	cout << "[1] - Cadastro de Usuario" << endl
 		<< "[2] - Usuarios com atraso de devolucao" << endl
 		<< "[3] - Historico de retiradas" << endl
 		<< "[4] - Listagem de Usuarios" << endl
-		<< "[0] - Voltar" << endl << endl;
+		<< "[0] - Voltar" << endl;
 }
 
 void submenu_filtrar_pesquisa() {
-	set_color(5);
+	set_color(6);
 	cout << "\nDeseja filtrar sua pesquisa por: " << endl;
 	set_color(7);
 	cout << "\n[1] - Livros" << endl
@@ -727,7 +751,7 @@ void submenu_filtrar_pesquisa() {
 		<< "[4] - Autor" << endl
 		<< "[5] - Editora" << endl
 		<< "[6] - Assunto" << endl
-		<< "[0] - Voltar" << endl << endl;
+		<< "[0] - Voltar" << endl;
 }
 #pragma endregion  Menu
 
@@ -808,12 +832,12 @@ int main()
 
 	while (true)
 	{
-		set_color(5);
+		set_color(6);
 		cout << "\n- - - - - - - - BIBLIOTECA - - - - - - - - -" << endl;
 		cout << "\t\t";
 		mostrar_data(data_atual);
 		exibir_menu_principal();
-		set_color(5);
+		set_color(6);
 		escolha_menu_principal = opcao_invalida("\nDigite uma opcao do menu", 0, 5);
 
 		// continua com a opção que o usuario escolheu
@@ -830,7 +854,6 @@ int main()
 			do {
 				system("cls");
 				submenu_cadastro();
-				set_color(5);
 				escolha_submenu = opcao_invalida("\nDigite uma opcao", 0, 5);
 				system("cls");
 
@@ -843,7 +866,7 @@ int main()
 				case 1: //cadastrar livro
 					do {
 						system("cls");
-						set_color(5);
+						set_color(6);
 						cout << "\n\tPreencha os dados abaixo: " << endl;
 						set_color(7);
 
@@ -876,7 +899,7 @@ int main()
 				case 2: //cadastrar revistas
 					do {
 						system("cls");
-						set_color(5);
+						set_color(6);
 						cout << "\n\tPreencha os dados abaixo: " << endl;
 						set_color(7);
 						cont_revistas++;
@@ -909,7 +932,7 @@ int main()
 				case 3: //cadastrar autor
 					do {
 						system("cls");
-						set_color(5);
+						set_color(6);
 						cout << "\nLista atual de autores cadastrados: \n" << endl;
 						set_color(7);
 
@@ -921,19 +944,12 @@ int main()
 
 						cont_autor++;
 						cin.ignore();
-						set_color(5);
+						set_color(6);
 						cout << "\nPreencha os dados abaixo: \n" << endl;
 						set_color(7);
 						autor = ler_autor();
 
-						flag = false;
-						for (int i = 0; i < cont_autor + 1; i++) { //verifica se ja existe cadastro deste autor
-							if (autor.nome == lista_autores[i].nome && autor.sobrenome == lista_autores[i].sobrenome) {
-								cout << "\nAutor ja cadastrado no sistema" << endl;
-								flag = true;
-							}
-						}
-						if (flag == false) {
+						if (verificador_autor(cont_autor, lista_autores, autor) == false) {
 							lista_autores[cont_autor].nome = autor.nome; //se nao tiver cadastro ainda, atualiza a lista de autores
 							lista_autores[cont_autor].sobrenome = autor.sobrenome;
 
@@ -951,7 +967,7 @@ int main()
 				case 4: //cadastrar editora
 					do {
 						system("cls");
-						set_color(5);
+						set_color(6);
 						cout << "\nLista atual de editoras cadastradas: \n" << endl;
 						set_color(7);
 
@@ -963,21 +979,13 @@ int main()
 
 						cont_editora++;
 						cin.ignore();
-						set_color(5);
+						set_color(6);
 						cout << "\nPreencha os dados abaixo: \n" << endl;
 						set_color(7);
 
 						ed = ler_editora();
 
-						flag = false;
-						for (int i = 0; i < cont_editora + 1; i++) { //verifica se ja existe cadastro deste nome de editora
-							if (ed.nome == lista_editoras[i].nome) {
-								cout << "\nEditora ja cadastrada no sistema" << endl;
-								flag = true;
-								break;
-							}
-						}
-						if (flag == false) {
+						if (verificador_editora(cont_editora, lista_editoras, ed) == false) {
 							lista_editoras[cont_editora].nome = ed.nome; //se nao tiver cadastro ainda, atualiza a lista de editoras
 							lista_editoras[cont_editora].local = ed.local;
 
@@ -1000,7 +1008,6 @@ int main()
 			system("cls");
 			do {
 				submenu_alteracao();
-				set_color(5);
 				escolha_submenu = opcao_invalida("\nDigite uma opcao", 0, 4);
 				system("cls");
 
@@ -1089,9 +1096,12 @@ int main()
 					cin.ignore();
 					autor = lista_autores[escolha - 1]; //salva o autor antes da mudança
 					lista_autores[escolha - 1] = ler_autor();
-					set_color(2);
-					cout << "\n\tAutor alterado com sucesso!\n" << endl;
-					set_color(7);
+					
+					if (verificador_autor(cont_autor, lista_autores, autor) == false) { //verifica se ja nao eh um autor cadastrado
+						set_color(2);
+						cout << "\n\tAutor alterado com sucesso!\n" << endl;
+						set_color(7);
+					}
 
 					//atualiza lista de livros tambem
 					for (int i = 0; i < cont_livros + 1; i++) {
@@ -1116,9 +1126,12 @@ int main()
 					cin.ignore();
 					ed = lista_editoras[escolha - 1];
 					lista_editoras[escolha - 1] = ler_editora();
-					set_color(2);
-					cout << "\n\tEditora alterada com sucesso!\n" << endl;
-					set_color(7);
+					
+					if (verificador_editora(cont_editora, lista_editoras, ed) == false) {
+						set_color(2);
+						cout << "\n\tEditora alterada com sucesso!\n" << endl;
+						set_color(7);
+					}
 
 					for (int i = 0; i < cont_livros + 1; i++) { //atualiza lista de livros com a editora alterada
 						if (lista_livros[i].editora.nome == ed.nome && lista_livros[i].editora.local == ed.local) {
@@ -1143,7 +1156,6 @@ int main()
 			system("cls");
 			do {
 				submenu_retirada();
-				set_color(5);
 				escolha_submenu = opcao_invalida("\nDigite uma opcao", 0, 2);
 				system("cls");
 
@@ -1331,7 +1343,6 @@ int main()
 			system("cls");
 			do {
 				submenu_acervo();
-				set_color(5);
 				escolha_submenu = opcao_invalida("\nDigite uma opcao", 0, 2);
 				system("cls");
 

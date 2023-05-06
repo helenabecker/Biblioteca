@@ -1612,10 +1612,12 @@ int main()
 					cout << "- - - - - USUARIOS COM ATRASO DE DEVOLUCAO - - - - -\n" << endl;
 					set_color(7);
 
+					flag = false;
 					for (int i = 0; i < cont_usuario + 1; i++) {
 						for (int j = 0; j < qtd_retiradas(lista_usuarios[i]); j++) {
 							if (lista_usuarios[i].retirados[j].atraso) {
 								cout << "ID: " << lista_usuarios[i].id << endl;
+								flag = true;
 
 								for (int k = 0; k < cont_livros + 1; k++) {
 									if (lista_usuarios[i].retirados[j].id == lista_livros[k].id) { // mostra livros emprestados em atraso
@@ -1642,6 +1644,9 @@ int main()
 								cout << endl;
 							}
 						}
+					}
+					if (!flag) {
+						cout << "\nNenhum Usuario com status de atraso foi encontrado\n" << endl;
 					}
 					system("pause");
 					system("cls");

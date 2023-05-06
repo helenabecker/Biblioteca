@@ -1585,7 +1585,9 @@ int main()
 					flag = false;
 					for (int i = 0; i <= cont_usuario; i++) {
 						if (lista_usuarios[i].nome == usuario.nome) { // verifica se o usuário já está cadastrado
-							cout << "\nUsuario ja cadastrado." << endl;
+							set_color(4);
+							cout << "\n\tUsuario ja cadastrado.\n" << endl;
+							set_color(7);
 							cont_usuario--;
 							flag = true;
 							break;
@@ -1594,12 +1596,12 @@ int main()
 					if (!flag) {
 						lista_usuarios[cont_usuario].nome = usuario.nome;
 						lista_usuarios[cont_usuario].id = id_usuario;
-						cout << "Seu ID de usuario eh: " << lista_usuarios[cont_usuario].id;
+						set_color(2);
+						cout << "\n\tUsuario cadastrado com sucesso!" << endl;
+						set_color(7);
+						cout << "\tSeu ID de usuario eh: " << lista_usuarios[cont_usuario].id << "\n\n";
 						id_usuario++;
 					}
-					set_color(2);
-					cout << "\nUsuario cadastrado com sucesso!" << endl;
-					set_color(7);
 					system("pause");
 					system("cls");
 					break;
@@ -1863,9 +1865,10 @@ int main()
 								for (int k = 0; k < cont_revistas + 1; k++) {
 									if (lista_usuarios[i].retirados[j].id == lista_revistas[k].id) { //mostra revistas retiradas
 										mostrar_revista(lista_revistas[k]);
-										cout << "\n\tData de retirada: ";
+										cout << "\tData de retirada: ";
 										mostrar_data(lista_usuarios[i].retirados[j].retirada);
-										//	cout << "\tData de devolucao: " << data_dev.dia << "/" << data_dev.mes << "/" << data_dev.ano << endl << endl;
+										cout << "\n\tData de devolucao: ";
+										mostrar_data(lista_usuarios[i].retirados[j].devolucao);
 										cout << endl;
 									}
 								}

@@ -745,7 +745,7 @@ void submenu_alteracao() {
 
 void submenu_retirada() {
 	set_color(6);
-	cout << "\n - - - - - RETIRADA - - - - -\n" << endl; //FALTA MUDAR O STATUS DE DISPONIVEL DO LIVRO OU REVISTA QUANDO FOR RETIRADO
+	cout << "\n - - - - - RETIRADA - - - - -\n" << endl;
 	set_color(7);
 	cout << "[1] - Livro\n"
 		<< "[2] - Revista\n"
@@ -841,7 +841,7 @@ int main()
 	gerar_titulos(lista_titulos, titulos_revistas); //cadastro de 9 titulos
 	gerar_ano(lista_ano); //cadastro de 10 anos aleatorios
 	gerar_mes(lista_mes); //cadastro de 10 meses aleatorios
-	gerar_nomes(lista_nomes); //cadastro de 10 meses aleatorios
+	gerar_nomes(lista_nomes); //cadastro de 3 nomes aleatorios
 
 	for (int i = 0; i < 5; i++) { //cadastro de 5 livros aleatorios
 		gerar_livros(lista_livros[i], lista_editoras[i], lista_autores[i], lista_assuntos[i], lista_titulos[i], lista_ano[i], id_livro);
@@ -1344,7 +1344,7 @@ int main()
 
 								for (int i = 0; i < cont_revistas + 1; i++) {
 									if (lista_revistas[i].id == escolha) {
-										lista_revistas[i].disponivel = false; //passa a colocar o livro como indisponivel
+										lista_revistas[i].disponivel = false; //passa a colocar a revista como indisponivel
 										break;
 									}
 								}
@@ -1410,7 +1410,7 @@ int main()
 
 						case 2: // mostrar todos os livros e revistas disponiveis
 							set_color(6);
-							cout << "\nLista de livros disponiveis:\n" << endl;
+							cout << "\nLista de itens disponiveis:\n" << endl;
 							set_color(7);
 							for (int i = 0; i < cont_livros + 1; i++) {
 								if (lista_livros[i].disponivel) {
@@ -1611,11 +1611,11 @@ int main()
 					for (int i = 0; i < cont_usuario + 1; i++) {
 						for (int j = 0; j < qtd_retiradas(lista_usuarios[i]); j++) {
 							if (lista_usuarios[i].retirados[j].atraso) {
-								cout << "ID: " << lista_usuarios[i].id << endl;
+								cout << "ID do Usuario: " << lista_usuarios[i].id << endl; //mostra ID do usuario q tem item em atraso
 								flag = true;
 
 								for (int k = 0; k < cont_livros + 1; k++) {
-									if (lista_usuarios[i].retirados[j].id == lista_livros[k].id) { // mostra livros emprestados em atraso
+									if (lista_usuarios[i].retirados[j].id == lista_livros[k].id) { // mostra livros em atraso
 										mostrar_livro(lista_livros[k]);
 										cout << "\tData de retirada: ";
 										mostrar_data(lista_usuarios[i].retirados[j].retirada);
@@ -1626,7 +1626,7 @@ int main()
 									}
 								}
 								for (int k = 0; k < cont_revistas + 1; k++) {
-									if (lista_usuarios[i].retirados[j].id == lista_revistas[k].id) { // mostra livros emprestados em atraso
+									if (lista_usuarios[i].retirados[j].id == lista_revistas[k].id) { // mostra revistas em atraso
 										mostrar_revista(lista_revistas[k]);
 										cout << "\tData de retirada: ";
 										mostrar_data(lista_usuarios[i].retirados[j].retirada);
@@ -1725,7 +1725,6 @@ int main()
 							for (int j = 0; j < qtd_retiradas(lista_usuarios[i]); j++) {
 								if (lista_usuarios[i].retirados[j].id == livro.id) { //encontra o usuario que retirou o livro
 									flag = true;
-									//cout << "\nData de retorno do item: " << mostrar_data(data_atual) << endl;
 
 									if (lista_usuarios[i].retirados[j].atraso) { //se tiver atraso mostra a quantidade de dias de atraso
 										cout << "\n\tItem devolvido com atraso!" << endl;
@@ -1823,7 +1822,6 @@ int main()
 							for (int j = 0; j < qtd_retiradas(lista_usuarios[i]); j++) {
 								if (lista_usuarios[i].retirados[j].id == livro.id) { //encontra o usuario que retirou o livro
 									flag = true;
-									//cout << mostrar_data(data_atual) << endl;
 
 									if (lista_usuarios[i].retirados[j].atraso) { //se tiver atraso mostra a quantidade de dias de atraso
 										cout << "\n\tItem devolvido com atraso!" << endl;

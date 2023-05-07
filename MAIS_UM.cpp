@@ -91,30 +91,6 @@ int opcao_invalida(string frase, int min, int max) {
 	return op;
 }
 
-bool verificador_autor(int cont_autor, Autor lista_autores[], Autor autor) { //verifica se ja existe cadastro deste autor
-	for (int i = 0; i < cont_autor + 1; i++) {
-		if (autor.nome == lista_autores[i].nome && autor.sobrenome == lista_autores[i].sobrenome) {
-			set_color(4);
-			cout << "\n\tAutor ja cadastrado no sistema" << endl;
-			return true;
-			break;
-		}
-	}
-	return false;
-}
-
-bool verificador_editora(int cont_editora, Editora lista_editoras[], Editora ed) { //verifica se ja existe cadastro desta editora
-	for (int i = 0; i < cont_editora + 1; i++) {
-		if (ed.nome == lista_editoras[i].nome && ed.local == lista_editoras[i].local) {
-			set_color(4);
-			cout << "\n\tEditora ja cadastrada no sistema" << endl;
-			return true;
-			break;
-		}
-	}
-	return false;
-}
-
 Data ler_data() {
 	Data d;
 	do {
@@ -139,66 +115,6 @@ void mostrar_data(Data d) {
 		cout << "0";
 	}
 	cout << d.mes << "/" << d.ano;
-}
-
-void mostrar_autor(Autor a) {
-	cout << a.nome << " " << a.sobrenome << endl;
-}
-
-void mostrar_editora(Editora ed) {
-	cout << ed.nome << ", " << ed.local << endl;
-}
-
-void mostrar_livro(Livro a) {
-	cout << "\nDados do livro " << a.id << ":\n" << endl
-		<< "\tTitulo: " << a.titulo << endl;
-
-	cout << "\tAutor: ";
-	mostrar_autor(a.autor);
-	cout << "\tEditora: ";
-	mostrar_editora(a.editora);
-
-	cout << "\tAno de Publicacao: ";
-	if (a.publicacao < 10) {
-		cout << "0";
-	}
-	cout << a.publicacao << endl;
-	cout << "\tAssunto: " << a.assunto << endl;
-
-	if (a.disponivel == true) {
-		cout << "\tStatus: Disponivel";
-	}
-	else {
-		cout << "\tStatus: Indisponivel";
-	}
-	cout << endl;
-}
-
-void mostrar_revista(Revista r) {
-	cout << "\nDados da Revista " << r.id << ":\n" << endl
-		<< "\tTitulo: " << r.titulo << endl
-
-		<< "\tEditora: ";
-	mostrar_editora(r.editora);
-
-	cout << "\tData da Publicacao: ";
-	if (r.publicacao.mes < 10) {
-		cout << "0";
-	}
-	cout << r.publicacao.mes << "/" << r.publicacao.ano << endl;
-	cout << "\tAssunto: " << r.assunto << endl;
-
-	if (r.disponivel == true)
-		cout << "\tStatus: Disponivel\n";
-	else {
-		cout << "\tStatus: Indisponivel\n";
-	}
-}
-
-void mostrar_usuario(Usuario u) {
-	cout << "\nDados do Usuario: " << endl
-		<< "\tID do usuario: " << u.id << endl
-		<< "\tNome Completo: " << u.nome << endl;
 }
 
 int dias_no_mes(int mes, int ano) {
@@ -265,6 +181,66 @@ int dias_passados(Data retirada, Data data) {
 	return dias;
 }
 
+void mostrar_autor(Autor a) {
+	cout << a.nome << " " << a.sobrenome << endl;
+}
+
+void mostrar_editora(Editora ed) {
+	cout << ed.nome << ", " << ed.local << endl;
+}
+
+void mostrar_livro(Livro a) {
+	cout << "\nDados do livro " << a.id << ":\n" << endl
+		<< "\tTitulo: " << a.titulo << endl;
+
+	cout << "\tAutor: ";
+	mostrar_autor(a.autor);
+	cout << "\tEditora: ";
+	mostrar_editora(a.editora);
+
+	cout << "\tAno de Publicacao: ";
+	if (a.publicacao < 10) {
+		cout << "0";
+	}
+	cout << a.publicacao << endl;
+	cout << "\tAssunto: " << a.assunto << endl;
+
+	if (a.disponivel == true) {
+		cout << "\tStatus: Disponivel";
+	}
+	else {
+		cout << "\tStatus: Indisponivel";
+	}
+	cout << endl;
+}
+
+void mostrar_revista(Revista r) {
+	cout << "\nDados da Revista " << r.id << ":\n" << endl
+		<< "\tTitulo: " << r.titulo << endl
+
+		<< "\tEditora: ";
+	mostrar_editora(r.editora);
+
+	cout << "\tData da Publicacao: ";
+	if (r.publicacao.mes < 10) {
+		cout << "0";
+	}
+	cout << r.publicacao.mes << "/" << r.publicacao.ano << endl;
+	cout << "\tAssunto: " << r.assunto << endl;
+
+	if (r.disponivel == true)
+		cout << "\tStatus: Disponivel\n";
+	else {
+		cout << "\tStatus: Indisponivel\n";
+	}
+}
+
+void mostrar_usuario(Usuario u) {
+	cout << "\nDados do Usuario: " << endl
+		<< "\tID do usuario: " << u.id << endl
+		<< "\tNome Completo: " << u.nome << endl;
+}
+
 Autor ler_autor() {
 	Autor autor;
 	cout << "Nome do Autor: ";
@@ -285,6 +261,30 @@ Editora ler_editora() {
 	getline(cin, editora.local);
 
 	return editora;
+}
+
+bool verificador_autor(int cont_autor, Autor lista_autores[], Autor autor) { //verifica se ja existe cadastro deste autor
+	for (int i = 0; i < cont_autor + 1; i++) {
+		if (autor.nome == lista_autores[i].nome && autor.sobrenome == lista_autores[i].sobrenome) {
+			set_color(4);
+			cout << "\n\tAutor ja cadastrado no sistema" << endl;
+			return true;
+			break;
+		}
+	}
+	return false;
+}
+
+bool verificador_editora(int cont_editora, Editora lista_editoras[], Editora ed) { //verifica se ja existe cadastro desta editora
+	for (int i = 0; i < cont_editora + 1; i++) {
+		if (ed.nome == lista_editoras[i].nome && ed.local == lista_editoras[i].local) {
+			set_color(4);
+			cout << "\n\tEditora ja cadastrada no sistema" << endl;
+			return true;
+			break;
+		}
+	}
+	return false;
 }
 
 Usuario cadastrar_usuario() {
@@ -706,11 +706,6 @@ void gerar_nomes(string lista_nomes[]) {
 void gerar_usuarios(Usuario& u, int id, string nome) {
 	u.nome = nome;
 	u.id = id;
-}
-
-// Função para verificar se um livro está disponível para empréstimo
-bool livro_disponivel(Livro livro) {
-	return !livro.disponivel;
 }
 
 #pragma endregion Funcoes
@@ -1869,14 +1864,14 @@ int main()
 					cin >> usuario.id;
 
 					soma = 0;
-					flag = false;
+					flag = false, flag_aux = false;
 
 					for (int i = 0; i < cont_usuario + 1; i++) {
 						if (lista_usuarios[i].id == usuario.id) { // encontra na lista de usuarios cadastrados o usuario correspondente ao id informado
 							flag = true;
-							soma = qtd_retiradas(lista_usuarios[i]);
 							cout << "\nHistorico de Retirada para " << lista_usuarios[i].nome << ": " << endl << endl;
-							for (int j = 0; j < soma; j++) {
+							
+							for (int j = 0; j < qtd_retiradas(lista_usuarios[i]); j++) {
 								for (int k = 0; k < cont_livros + 1; k++) {
 									if (lista_usuarios[i].retirados[j].id == lista_livros[k].id) { // mostra livros retirados
 										mostrar_livro(lista_livros[k]);
@@ -1885,6 +1880,7 @@ int main()
 										cout << "\n\tData de devolucao: ";
 										mostrar_data(lista_usuarios[i].retirados[j].devolucao);
 										cout << endl;
+										flag_aux = true; //confirma que houve pelo menos uma retirada
 									}
 								}
 								for (int k = 0; k < cont_revistas + 1; k++) {
@@ -1895,6 +1891,7 @@ int main()
 										cout << "\n\tData de devolucao: ";
 										mostrar_data(lista_usuarios[i].retirados[j].devolucao);
 										cout << endl;
+										flag_aux = true; //confirma que houve pelo menos uma retirada
 									}
 								}
 							}
@@ -1904,6 +1901,12 @@ int main()
 						set_color(4);
 						cout << "\nID de Usuario nao foi encontrado, verifique existe cadastro ou se digitou o ID corretamente" << endl;
 						set_color(7);
+					}
+					if (!flag_aux && flag) {
+						cout << "\tUsuario ainda nao realizou retirada de material da Biblioteca\n" << endl;
+						system("pause");
+						system("cls");
+						break; //se nao tiver nehnhuma retirada, volta para o menu
 					}
 					cout << endl;
 					system("pause");
